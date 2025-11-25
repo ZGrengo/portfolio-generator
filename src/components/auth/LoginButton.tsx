@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 'use client';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
-import Link from 'next/link';
 
 export default function LoginButton() {
   const { user, isLoading } = useUser();
@@ -14,22 +14,22 @@ export default function LoginButton() {
     return (
       <div className="flex items-center gap-4">
         <span>Welcome, {user.name}</span>
-        <Link 
+        <a
           href="/api/auth/logout"
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
         >
           Logout
-        </Link>
+        </a>
       </div>
     );
   }
 
   return (
-    <Link 
+    <a
       href="/api/auth/login"
       className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
     >
       Login
-    </Link>
+    </a>
   );
 } 
