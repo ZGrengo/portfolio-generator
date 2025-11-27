@@ -4,11 +4,17 @@ export interface IPortfolio extends Document {
   userId: string;
   title: string;
   description: string;
+  template: 'minimalistic' | 'modern';
+  colors: {
+    primary: string;
+    secondary: string;
+    highlight: string;
+  };
   projects: Array<{
     title: string;
     description: string;
     technologies: string[];
-    imageUrl?: string;
+    imageUrls?: string[];
     projectUrl?: string;
     githubUrl?: string;
   }>;
@@ -35,11 +41,17 @@ const PortfolioSchema: Schema = new Schema({
   userId: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
+  template: { type: String, enum: ['minimalistic', 'modern'], default: 'minimalistic' },
+  colors: {
+    primary: { type: String, default: '#3B82F6' },
+    secondary: { type: String, default: '#1E40AF' },
+    highlight: { type: String, default: '#F59E0B' }
+  },
   projects: [{
     title: { type: String, required: true },
     description: { type: String, required: true },
     technologies: [{ type: String }],
-    imageUrl: { type: String },
+    imageUrls: [{ type: String }],
     projectUrl: { type: String },
     githubUrl: { type: String }
   }],
