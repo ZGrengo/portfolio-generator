@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import Navbar from '@/components/Navbar';
 
 type Project = {
   title: string;
@@ -547,8 +548,9 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-10 space-y-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Navbar />
+      <div className="flex-grow max-w-6xl mx-auto px-4 py-10 space-y-8 w-full">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600">Manage your portfolios and their content.</p>
@@ -639,7 +641,7 @@ export default function DashboardPage() {
                   onChange={(event) =>
                     setCreateForm((prev) => ({ ...prev, title: event.target.value }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   placeholder="e.g. Product Designer Portfolio"
                 />
               </div>
@@ -651,7 +653,7 @@ export default function DashboardPage() {
                     setCreateForm((prev) => ({ ...prev, description: event.target.value }))
                   }
                   rows={3}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   placeholder="Short summary"
                 />
               </div>
@@ -665,7 +667,7 @@ export default function DashboardPage() {
                   onChange={(event) =>
                     setCreateForm((prev) => ({ ...prev, skills: event.target.value }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   placeholder="UI Design, UX Research, Prototyping"
                 />
               </div>
@@ -676,7 +678,7 @@ export default function DashboardPage() {
                   onChange={(event) =>
                     setCreateForm((prev) => ({ ...prev, template: event.target.value as 'minimalistic' | 'modern' }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                 >
                   <option value="minimalistic">Minimalistic</option>
                   <option value="modern">Modern</option>
@@ -762,7 +764,7 @@ export default function DashboardPage() {
                   onChange={(event) =>
                     setEditForm((prev) => ({ ...prev, title: event.target.value }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                 />
               </div>
               <div>
@@ -773,7 +775,7 @@ export default function DashboardPage() {
                     setEditForm((prev) => ({ ...prev, description: event.target.value }))
                   }
                   rows={3}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                 />
               </div>
               <div>
@@ -783,7 +785,7 @@ export default function DashboardPage() {
                   onChange={(event) =>
                     setEditForm((prev) => ({ ...prev, template: event.target.value as 'minimalistic' | 'modern' }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                 >
                   <option value="minimalistic">Minimalistic</option>
                   <option value="modern">Modern</option>
@@ -884,7 +886,7 @@ export default function DashboardPage() {
                     type="text"
                     value={newSkill}
                     onChange={(event) => setNewSkill(event.target.value)}
-                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                     placeholder="Add a skill"
                   />
                   <button
@@ -941,7 +943,7 @@ export default function DashboardPage() {
                       setNewProject((prev) => ({ ...prev, title: event.target.value }))
                     }
                     placeholder="Project title"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <textarea
                     value={newProject.description}
@@ -950,7 +952,7 @@ export default function DashboardPage() {
                     }
                     placeholder="Project description"
                     rows={2}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <input
                     type="text"
@@ -959,7 +961,7 @@ export default function DashboardPage() {
                       setNewProject((prev) => ({ ...prev, technologies: event.target.value }))
                     }
                     placeholder="Technologies (comma separated)"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
@@ -976,7 +978,7 @@ export default function DashboardPage() {
                             setNewProject((prev) => ({ ...prev, imageUrls: updatedUrls }));
                           }}
                           placeholder={`Image URL ${idx + 1}`}
-                          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                         />
                         <button
                           type="button"
@@ -1038,7 +1040,7 @@ export default function DashboardPage() {
                       setNewProject((prev) => ({ ...prev, projectUrl: event.target.value }))
                     }
                     placeholder="Project URL (optional)"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <input
                     type="url"
@@ -1047,7 +1049,7 @@ export default function DashboardPage() {
                       setNewProject((prev) => ({ ...prev, githubUrl: event.target.value }))
                     }
                     placeholder="GitHub URL (optional)"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <button
                     type="submit"
@@ -1108,7 +1110,7 @@ export default function DashboardPage() {
                       setNewEducation((prev) => ({ ...prev, institution: event.target.value }))
                     }
                     placeholder="Institution"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <input
                     type="text"
@@ -1117,7 +1119,7 @@ export default function DashboardPage() {
                       setNewEducation((prev) => ({ ...prev, degree: event.target.value }))
                     }
                     placeholder="Degree"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <input
                     type="text"
@@ -1126,7 +1128,7 @@ export default function DashboardPage() {
                       setNewEducation((prev) => ({ ...prev, field: event.target.value }))
                     }
                     placeholder="Field of Study"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <div className="grid gap-3 md:grid-cols-2">
                     <div>
@@ -1137,7 +1139,7 @@ export default function DashboardPage() {
                         onChange={(event) =>
                           setNewEducation((prev) => ({ ...prev, startDate: event.target.value }))
                         }
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                       />
                     </div>
                     <div>
@@ -1148,7 +1150,7 @@ export default function DashboardPage() {
                         onChange={(event) =>
                           setNewEducation((prev) => ({ ...prev, endDate: event.target.value }))
                         }
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                       />
                     </div>
                   </div>
@@ -1208,7 +1210,7 @@ export default function DashboardPage() {
                       setNewExperience((prev) => ({ ...prev, company: event.target.value }))
                     }
                     placeholder="Company"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <input
                     type="text"
@@ -1217,7 +1219,7 @@ export default function DashboardPage() {
                       setNewExperience((prev) => ({ ...prev, position: event.target.value }))
                     }
                     placeholder="Position"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <textarea
                     value={newExperience.description}
@@ -1226,7 +1228,7 @@ export default function DashboardPage() {
                     }
                     placeholder="Key contributions"
                     rows={2}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
                   <div className="grid gap-3 md:grid-cols-2">
                     <div>
@@ -1237,7 +1239,7 @@ export default function DashboardPage() {
                         onChange={(event) =>
                           setNewExperience((prev) => ({ ...prev, startDate: event.target.value }))
                         }
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                       />
                     </div>
                     <div>
@@ -1248,7 +1250,7 @@ export default function DashboardPage() {
                         onChange={(event) =>
                           setNewExperience((prev) => ({ ...prev, endDate: event.target.value }))
                         }
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                       />
                     </div>
                   </div>
@@ -1268,6 +1270,13 @@ export default function DashboardPage() {
           </section>
         )}
       </div>
+      <footer className="border-t bg-white mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <p className="text-center text-gray-600">
+            © {new Date().getFullYear()} Portfolio Generator. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -4,9 +4,14 @@ import { useState } from 'react';
 
 interface ShareButtonProps {
   portfolioId: string;
+  colors?: {
+    primary: string;
+    secondary: string;
+    highlight: string;
+  };
 }
 
-export default function ShareButton({ portfolioId }: ShareButtonProps) {
+export default function ShareButton({ portfolioId, colors }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -40,14 +45,42 @@ export default function ShareButton({ portfolioId }: ShareButtonProps) {
     }
   };
 
+  const getButtonColor = () => {
+    if (copied) {
+      return '#10b981'; // green-600 for copied state
+    }
+    return colors?.highlight || '#F59E0B';
+  };
+
+  const getHoverColor = () => {
+    if (copied) {
+      return '#059669'; // green-700 for copied hover
+    }
+    // Create a darker version of highlight color
+    if (colors?.highlight) {
+      // Simple darkening by reducing RGB values
+      const hex = colors.highlight.replace('#', '');
+      const r = Math.max(0, parseInt(hex.substr(0, 2), 16) - 20);
+      const g = Math.max(0, parseInt(hex.substr(2, 2), 16) - 20);
+      const b = Math.max(0, parseInt(hex.substr(4, 2), 16) - 20);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+    return '#D97706'; // amber-700 as fallback
+  };
+
   return (
     <button
       onClick={handleShare}
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full px-6 py-3 text-white shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 ${
-        copied 
-          ? 'bg-green-600 hover:bg-green-700' 
-          : 'bg-blue-600 hover:bg-blue-700'
-      }`}
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full px-6 py-3 text-white shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
+      style={{
+        backgroundColor: getButtonColor(),
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = getHoverColor();
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = getButtonColor();
+      }}
       aria-label="Share portfolio"
     >
       {copied ? (

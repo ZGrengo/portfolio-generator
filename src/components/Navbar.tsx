@@ -16,13 +16,13 @@ export default function Navbar() {
 
   if (!mounted || isLoading) {
     return (
-      <nav className="w-full border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <nav className="w-full border-b backdrop-blur-sm sticky top-0 z-50" style={{ backgroundColor: '#28536B', borderColor: '#28536B' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-xl font-bold text-gray-900">
+            <Link href="/" className="text-xl font-bold text-white">
               Portfolio Generator
             </Link>
-            <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+            <div className="animate-pulse bg-white/20 h-8 w-20 rounded"></div>
           </div>
         </div>
       </nav>
@@ -30,10 +30,10 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="w-full border-b backdrop-blur-sm sticky top-0 z-50" style={{ backgroundColor: '#28536B', borderColor: '#28536B' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
+          <Link href="/" className="text-xl font-bold text-white hover:text-white/80 transition-colors">
             Portfolio Generator
           </Link>
           
@@ -50,19 +50,20 @@ export default function Navbar() {
                       className="rounded-full"
                     />
                   )}
-                  <span className="text-sm font-medium text-gray-700 hidden sm:inline">
+                  <span className="text-sm font-medium text-white/90 hidden sm:inline">
                     {user.name || user.email}
                   </span>
                 </div>
                 <Link
                   href="/dashboard"
-                  className="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
+                  className="text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-colors"
                 >
                   Dashboard
                 </Link>
                 <a
                   href="/api/auth/logout"
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-90"
+                  style={{ backgroundColor: '#C2948A' }}
                 >
                   Logout
                 </a>
@@ -70,7 +71,8 @@ export default function Navbar() {
             ) : (
               <a
                 href="/api/auth/login"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-90"
+                style={{ backgroundColor: '#C2948A' }}
               >
                 Login
               </a>

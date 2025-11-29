@@ -69,7 +69,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
               {portfolio.skills.map((skill, idx) => (
                 <span
                   key={idx}
-                  className="px-4 py-2 text-sm border"
+                  className="px-4 py-2 text-sm border uppercase"
                   style={{ borderColor: colors.primary, color: colors.secondary }}
                 >
                   {skill}
@@ -100,7 +100,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
                       />
                     </div>
                   )}
-                  <h3 className="text-xl font-light mb-2" style={{ color: colors.primary }}>
+                  <h3 className="text-xl font-light mb-2 uppercase" style={{ color: colors.primary }}>
                     {project.title}
                   </h3>
                   <p className="mb-4 leading-relaxed" style={{ color: colors.secondary }}>
@@ -111,7 +111,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
                       {project.technologies.map((tech, techIdx) => (
                         <span
                           key={techIdx}
-                          className="text-xs px-2 py-1"
+                          className="text-xs px-2 py-1 uppercase"
                           style={{ backgroundColor: colors.highlight, color: 'white' }}
                         >
                           {tech}
@@ -125,7 +125,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
                         href={project.projectUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm underline"
+                        className="text-sm underline transition-opacity duration-200 hover:opacity-70"
                         style={{ color: colors.primary }}
                       >
                         View Project
@@ -136,7 +136,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm underline"
+                        className="text-sm underline transition-opacity duration-200 hover:opacity-70"
                         style={{ color: colors.primary }}
                       >
                         GitHub
@@ -158,7 +158,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
             <div className="space-y-8">
               {portfolio.experience.map((exp, idx) => (
                 <div key={idx} className="border-l-2 pl-6" style={{ borderColor: colors.primary }}>
-                  <h3 className="text-lg font-medium mb-1" style={{ color: colors.primary }}>
+                  <h3 className="text-lg font-medium mb-1 uppercase" style={{ color: colors.primary }}>
                     {exp.position}
                   </h3>
                   <p className="text-sm mb-2" style={{ color: colors.secondary }}>
@@ -185,10 +185,10 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
             <div className="space-y-8">
               {portfolio.education.map((edu, idx) => (
                 <div key={idx} className="border-l-2 pl-6" style={{ borderColor: colors.primary }}>
-                  <h3 className="text-lg font-medium mb-1" style={{ color: colors.primary }}>
+                  <h3 className="text-lg font-medium mb-1 uppercase" style={{ color: colors.primary }}>
                     {edu.degree}
                   </h3>
-                  <p className="text-sm mb-2" style={{ color: colors.secondary }}>
+                  <p className="text-sm mb-2 font-semibold" style={{ color: colors.secondary }}>
                     {edu.field}
                   </p>
                   <p className="text-sm mb-1" style={{ color: colors.secondary }}>
@@ -209,7 +209,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
           Portfolio generated with Portfolio Generator
         </div>
       </footer>
-      <ShareButton portfolioId={portfolioId} />
+      <ShareButton portfolioId={portfolioId} colors={colors} />
     </div>
   );
 }
