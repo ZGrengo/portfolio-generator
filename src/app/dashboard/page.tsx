@@ -1270,10 +1270,10 @@ export default function DashboardPage() {
           </section>
         )}
       </div>
-      <footer className="border-t bg-white mt-auto">
+      <footer className="border-t mt-auto" style={{ backgroundColor: '#28536B', borderColor: '#28536B' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <p className="text-center text-gray-600">
-            © {new Date().getFullYear()} Portfolio Generator. All rights reserved.
+          <p className="text-center text-white/80">
+            © {new Date().getFullYear()} Portfolio Generator by Gregory Pimentel.
           </p>
         </div>
       </footer>

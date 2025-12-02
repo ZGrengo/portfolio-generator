@@ -75,8 +75,8 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
                   href={image.projectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-medium hover:underline"
-                  style={{ color: colors?.highlight || '#F59E0B' }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
+                  style={{ backgroundColor: colors?.highlight || '#F59E0B' }}
                 >
                   View Project
                   <svg
