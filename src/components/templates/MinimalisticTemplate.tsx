@@ -206,7 +206,7 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
 
       <footer className="border-t-2 py-8 px-6 mt-16" style={{ borderColor: colors.primary }}>
         <div className="max-w-4xl mx-auto text-center text-sm" style={{ color: colors.secondary }}>
-          Portfolio generated with Portfolio Generator
+          Generated with Portfolio Generator by Gregory Pimentel
         </div>
       </footer>
       <ShareButton portfolioId={portfolioId} colors={colors} />

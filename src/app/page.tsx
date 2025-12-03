@@ -15,9 +15,8 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
-              href="/api/auth/login"
+              href="/dashboard"
               className="text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl hover:opacity-90 hover:scale-105"
               style={{ backgroundColor: '#C2948A' }}
             >
@@ -43,7 +42,7 @@ export default function Home() {
                 <div className="p-6 rounded-lg shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] cursor-default">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Fully Dynamic Portfolio Pages</h3>
                   <p className="text-gray-600 text-sm">
-                    Every section — projects, skills, experience — updates live based on your data.
+                    Every section - projects, skills, experience - updates live based on your data.
                   </p>
                 </div>
 
@@ -71,7 +70,7 @@ export default function Home() {
                 <div className="p-6 rounded-lg shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] cursor-default">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Responsive by Design</h3>
                   <p className="text-gray-600 text-sm">
-                    Beautiful on desktop, tablet, and mobile — your portfolio always looks professional.
+                    Beautiful on desktop, tablet, and mobile - your portfolio always looks professional.
                   </p>
                 </div>
 
@@ -99,7 +98,7 @@ export default function Home() {
                         Start by adding the basics: title, description, skills, experience, and education.
                       </p>
                       <p className="text-gray-600 text-sm">
-                        You can update your information anytime — everything stays neatly organized in your dashboard.
+                        You can update your information anytime - everything stays neatly organized in your dashboard.
                       </p>
                     </div>
                   </div>
@@ -130,7 +129,7 @@ export default function Home() {
                     <div className="flex-grow">
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">Choose a template</h3>
                       <p className="text-gray-700 mb-2">
-                        Pick between multiple professionally designed layouts — modern, minimalistic, or aesthetic-focused.
+                        Pick between multiple professionally designed layouts - modern, minimalistic, or aesthetic-focused.
                       </p>
                       <p className="text-gray-600 text-sm">
                         Each template adapts your content automatically using your chosen color palette.
@@ -181,7 +180,7 @@ export default function Home() {
       <footer className="border-t mt-auto" style={{ backgroundColor: '#28536B', borderColor: '#28536B' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <p className="text-center text-white/80">
-            © {new Date().getFullYear()} Portfolio Generator. All rights reserved.
+            © {new Date().getFullYear()} Portfolio Generator by Gregory Pimentel.
           </p>
         </div>
       </footer>

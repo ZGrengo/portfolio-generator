@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import MinimalisticTemplate from '@/components/templates/MinimalisticTemplate';
 import ModernTemplate from '@/components/templates/ModernTemplate';
+import LoadingPortfolioReveal from '@/components/LoadingPortfolioReveal';
 import connectDB from '@/lib/db';
 import Portfolio from '@/models/Portfolio';
 
@@ -96,17 +97,21 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
   };
 
   const TemplateComponent = serializedPortfolio.template === 'modern' ? ModernTemplate : MinimalisticTemplate;
+  const colors = serializedPortfolio.colors || {
+    primary: '#3B82F6',
+    secondary: '#1E40AF',
+    highlight: '#F59E0B',
+  };
 
   return (
-    <TemplateComponent
-      portfolio={portfolioData}
-      portfolioId={id}
-      colors={serializedPortfolio.colors || {
-        primary: '#3B82F6',
-        secondary: '#1E40AF',
-        highlight: '#F59E0B',
-      }}
-    />
+    <>
+      <LoadingPortfolioReveal color={colors.primary} highlightColor={colors.highlight} />
+      <TemplateComponent
+        portfolio={portfolioData}
+        portfolioId={id}
+        colors={colors}
+      />
+    </>
   );
 }
 

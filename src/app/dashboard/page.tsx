@@ -93,6 +93,57 @@ const parseCommaSeparated = (value: string) =>
 const formatDate = (value?: string) =>
   value ? new Date(value).toISOString().slice(0, 10) : '';
 
+// Validation helpers
+const isValidUrl = (url: string): boolean => {
+  if (!url.trim()) return true; // Empty URLs are optional
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
+const isValidHexColor = (color: string): boolean => {
+  return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+};
+
+const validateTextLength = (text: string, maxLength: number, fieldName: string): string | null => {
+  const trimmed = text.trim();
+  if (trimmed.length === 0) {
+    return `${fieldName} cannot be empty`;
+  }
+  if (trimmed.length > maxLength) {
+    return `${fieldName} must be ${maxLength} characters or less`;
+  }
+  return null;
+};
+
+const validateDateRange = (startDate: string, endDate?: string): string | null => {
+  if (!startDate) return null;
+  
+  const start = new Date(startDate);
+  const today = new Date();
+  today.setHours(23, 59, 59, 999); // End of today
+  
+  // Start date shouldn't be in the future
+  if (start > today) {
+    return 'Start date cannot be in the future';
+  }
+  
+  if (endDate) {
+    const end = new Date(endDate);
+    if (end < start) {
+      return 'End date must be after start date';
+    }
+    if (end > today) {
+      return 'End date cannot be in the future';
+    }
+  }
+  
+  return null;
+};
+
 export default function DashboardPage() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -224,8 +275,22 @@ export default function DashboardPage() {
   const handleCreatePortfolio = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!createForm.title || !createForm.description) {
-      showError('Title and description are required');
+    const titleError = validateTextLength(createForm.title, 100, 'Title');
+    if (titleError) {
+      showError(titleError);
+      return;
+    }
+
+    const descError = validateTextLength(createForm.description, 500, 'Description');
+    if (descError) {
+      showError(descError);
+      return;
+    }
+
+    if (!isValidHexColor(createForm.colors.primary) || 
+        !isValidHexColor(createForm.colors.secondary) || 
+        !isValidHexColor(createForm.colors.highlight)) {
+      showError('Please select valid colors');
       return;
     }
 
@@ -234,8 +299,8 @@ export default function DashboardPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: createForm.title,
-          description: createForm.description,
+          title: createForm.title.trim(),
+          description: createForm.description.trim(),
           template: createForm.template,
           colors: createForm.colors,
           skills: parseCommaSeparated(createForm.skills),
@@ -286,11 +351,30 @@ export default function DashboardPage() {
     event.preventDefault();
     if (!selectedPortfolio) return;
 
+    const titleError = validateTextLength(editForm.title, 100, 'Title');
+    if (titleError) {
+      showError(titleError);
+      return;
+    }
+
+    const descError = validateTextLength(editForm.description, 500, 'Description');
+    if (descError) {
+      showError(descError);
+      return;
+    }
+
+    if (!isValidHexColor(editForm.colors.primary) || 
+        !isValidHexColor(editForm.colors.secondary) || 
+        !isValidHexColor(editForm.colors.highlight)) {
+      showError('Please select valid colors');
+      return;
+    }
+
     await updatePortfolio(
       selectedPortfolio._id,
       {
-        title: editForm.title,
-        description: editForm.description,
+        title: editForm.title.trim(),
+        description: editForm.description.trim(),
         template: editForm.template,
         colors: editForm.colors,
       },
@@ -300,7 +384,13 @@ export default function DashboardPage() {
 
   const handleAddSkill = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!selectedPortfolio || !newSkill.trim()) return;
+    if (!selectedPortfolio) return;
+
+    const skillError = validateTextLength(newSkill, 50, 'Skill');
+    if (skillError) {
+      showError(skillError);
+      return;
+    }
 
     const updatedSkills = [...selectedPortfolio.skills, newSkill.trim()];
     await updatePortfolio(selectedPortfolio._id, { skills: updatedSkills }, 'Skill added');
@@ -312,7 +402,13 @@ export default function DashboardPage() {
     const current = selectedPortfolio.skills[index];
     const updated = window.prompt('Update skill', current);
 
-    if (updated === null || !updated.trim()) {
+    if (updated === null) {
+      return;
+    }
+
+    const skillError = validateTextLength(updated, 50, 'Skill');
+    if (skillError) {
+      showError(skillError);
       return;
     }
 
@@ -332,19 +428,45 @@ export default function DashboardPage() {
     event.preventDefault();
     if (!selectedPortfolio) return;
 
-    if (!newProject.title || !newProject.description) {
-      showError('Project title and description are required');
+    const titleError = validateTextLength(newProject.title, 100, 'Project title');
+    if (titleError) {
+      showError(titleError);
       return;
     }
 
-    const filteredImageUrls = newProject.imageUrls.filter((url) => url.trim() !== '');
+    const descError = validateTextLength(newProject.description, 1000, 'Project description');
+    if (descError) {
+      showError(descError);
+      return;
+    }
+
+    // Validate URLs
+    const imageUrls = newProject.imageUrls.filter((url) => url.trim() !== '');
+    for (const url of imageUrls) {
+      if (!isValidUrl(url)) {
+        showError(`Invalid image URL: ${url}`);
+        return;
+      }
+    }
+
+    if (newProject.projectUrl && !isValidUrl(newProject.projectUrl)) {
+      showError('Invalid project URL');
+      return;
+    }
+
+    if (newProject.githubUrl && !isValidUrl(newProject.githubUrl)) {
+      showError('Invalid GitHub URL');
+      return;
+    }
+
+    const filteredImageUrls = imageUrls;
     const projectPayload: Project = {
-      title: newProject.title,
-      description: newProject.description,
+      title: newProject.title.trim(),
+      description: newProject.description.trim(),
       technologies: parseCommaSeparated(newProject.technologies),
-      imageUrls: filteredImageUrls.length > 0 ? filteredImageUrls : undefined,
-      projectUrl: newProject.projectUrl || undefined,
-      githubUrl: newProject.githubUrl || undefined,
+      imageUrls: filteredImageUrls.length > 0 ? filteredImageUrls.map(url => url.trim()) : undefined,
+      projectUrl: newProject.projectUrl?.trim() || undefined,
+      githubUrl: newProject.githubUrl?.trim() || undefined,
     };
 
     await updatePortfolio(
@@ -359,9 +481,19 @@ export default function DashboardPage() {
     if (!selectedPortfolio) return;
     const project = selectedPortfolio.projects[index];
     const title = window.prompt('Project title', project.title);
-    if (title === null || !title.trim()) return;
+    if (title === null) return;
+    const titleError = validateTextLength(title, 100, 'Project title');
+    if (titleError) {
+      showError(titleError);
+      return;
+    }
     const description = window.prompt('Project description', project.description);
-    if (description === null || !description.trim()) return;
+    if (description === null) return;
+    const descError = validateTextLength(description, 1000, 'Project description');
+    if (descError) {
+      showError(descError);
+      return;
+    }
     const technologies = window.prompt(
       'Technologies (comma separated)',
       project.technologies.join(', ')
@@ -372,6 +504,8 @@ export default function DashboardPage() {
       title: title.trim(),
       description: description.trim(),
       technologies: technologies ? parseCommaSeparated(technologies) : project.technologies,
+      projectUrl: project.projectUrl?.trim() || undefined,
+      githubUrl: project.githubUrl?.trim() || undefined,
     };
 
     await updatePortfolio(
@@ -395,22 +529,39 @@ export default function DashboardPage() {
     event.preventDefault();
     if (!selectedPortfolio) return;
 
-    const requiredFields = [
-      newEducation.institution,
-      newEducation.degree,
-      newEducation.field,
-      newEducation.startDate,
-    ];
+    const institutionError = validateTextLength(newEducation.institution, 200, 'Institution');
+    if (institutionError) {
+      showError(institutionError);
+      return;
+    }
 
-    if (requiredFields.some((field) => !field)) {
-      showError('Please complete all required education fields');
+    const degreeError = validateTextLength(newEducation.degree, 100, 'Degree');
+    if (degreeError) {
+      showError(degreeError);
+      return;
+    }
+
+    const fieldError = validateTextLength(newEducation.field, 100, 'Field of study');
+    if (fieldError) {
+      showError(fieldError);
+      return;
+    }
+
+    if (!newEducation.startDate) {
+      showError('Start date is required');
+      return;
+    }
+
+    const dateError = validateDateRange(newEducation.startDate, newEducation.endDate);
+    if (dateError) {
+      showError(dateError);
       return;
     }
 
     const educationPayload: Education = {
-      institution: newEducation.institution,
-      degree: newEducation.degree,
-      field: newEducation.field,
+      institution: newEducation.institution.trim(),
+      degree: newEducation.degree.trim(),
+      field: newEducation.field.trim(),
       startDate: new Date(newEducation.startDate).toISOString(),
       endDate: newEducation.endDate ? new Date(newEducation.endDate).toISOString() : undefined,
     };
@@ -427,11 +578,26 @@ export default function DashboardPage() {
     if (!selectedPortfolio) return;
     const education = selectedPortfolio.education[index];
     const institution = window.prompt('Institution', education.institution);
-    if (institution === null || !institution.trim()) return;
+    if (institution === null) return;
+    const instError = validateTextLength(institution, 200, 'Institution');
+    if (instError) {
+      showError(instError);
+      return;
+    }
     const degree = window.prompt('Degree', education.degree);
-    if (degree === null || !degree.trim()) return;
+    if (degree === null) return;
+    const degreeError = validateTextLength(degree, 100, 'Degree');
+    if (degreeError) {
+      showError(degreeError);
+      return;
+    }
     const field = window.prompt('Field of study', education.field);
-    if (field === null || !field.trim()) return;
+    if (field === null) return;
+    const fieldError = validateTextLength(field, 100, 'Field of study');
+    if (fieldError) {
+      showError(fieldError);
+      return;
+    }
     const startDate = window.prompt(
       'Start date (YYYY-MM-DD)',
       formatDate(education.startDate)
@@ -441,13 +607,19 @@ export default function DashboardPage() {
       'End date (YYYY-MM-DD or empty)',
       formatDate(education.endDate)
     );
+    
+    const dateError = validateDateRange(startDate, endDate || undefined);
+    if (dateError) {
+      showError(dateError);
+      return;
+    }
 
     const updatedEducation: Education = {
       institution: institution.trim(),
       degree: degree.trim(),
       field: field.trim(),
-      startDate: new Date(startDate).toISOString(),
-      endDate: endDate ? new Date(endDate).toISOString() : undefined,
+      startDate: new Date(startDate.trim()).toISOString(),
+      endDate: endDate?.trim() ? new Date(endDate.trim()).toISOString() : undefined,
     };
 
     await updatePortfolio(
@@ -471,22 +643,39 @@ export default function DashboardPage() {
     event.preventDefault();
     if (!selectedPortfolio) return;
 
-    const requiredFields = [
-      newExperience.company,
-      newExperience.position,
-      newExperience.description,
-      newExperience.startDate,
-    ];
+    const companyError = validateTextLength(newExperience.company, 200, 'Company');
+    if (companyError) {
+      showError(companyError);
+      return;
+    }
 
-    if (requiredFields.some((field) => !field)) {
-      showError('Please complete all required experience fields');
+    const positionError = validateTextLength(newExperience.position, 100, 'Position');
+    if (positionError) {
+      showError(positionError);
+      return;
+    }
+
+    const descError = validateTextLength(newExperience.description, 1000, 'Description');
+    if (descError) {
+      showError(descError);
+      return;
+    }
+
+    if (!newExperience.startDate) {
+      showError('Start date is required');
+      return;
+    }
+
+    const dateError = validateDateRange(newExperience.startDate, newExperience.endDate);
+    if (dateError) {
+      showError(dateError);
       return;
     }
 
     const experiencePayload: Experience = {
-      company: newExperience.company,
-      position: newExperience.position,
-      description: newExperience.description,
+      company: newExperience.company.trim(),
+      position: newExperience.position.trim(),
+      description: newExperience.description.trim(),
       startDate: new Date(newExperience.startDate).toISOString(),
       endDate: newExperience.endDate ? new Date(newExperience.endDate).toISOString() : undefined,
     };
@@ -503,11 +692,26 @@ export default function DashboardPage() {
     if (!selectedPortfolio) return;
     const experience = selectedPortfolio.experience[index];
     const company = window.prompt('Company', experience.company);
-    if (company === null || !company.trim()) return;
+    if (company === null) return;
+    const companyError = validateTextLength(company, 200, 'Company');
+    if (companyError) {
+      showError(companyError);
+      return;
+    }
     const position = window.prompt('Position', experience.position);
-    if (position === null || !position.trim()) return;
+    if (position === null) return;
+    const positionError = validateTextLength(position, 100, 'Position');
+    if (positionError) {
+      showError(positionError);
+      return;
+    }
     const description = window.prompt('Description', experience.description);
-    if (description === null || !description.trim()) return;
+    if (description === null) return;
+    const descError = validateTextLength(description, 1000, 'Description');
+    if (descError) {
+      showError(descError);
+      return;
+    }
     const startDate = window.prompt(
       'Start date (YYYY-MM-DD)',
       formatDate(experience.startDate)
@@ -517,13 +721,19 @@ export default function DashboardPage() {
       'End date (YYYY-MM-DD or empty)',
       formatDate(experience.endDate)
     );
+    
+    const dateError = validateDateRange(startDate, endDate || undefined);
+    if (dateError) {
+      showError(dateError);
+      return;
+    }
 
     const updatedExperience: Experience = {
       company: company.trim(),
       position: position.trim(),
       description: description.trim(),
-      startDate: new Date(startDate).toISOString(),
-      endDate: endDate ? new Date(endDate).toISOString() : undefined,
+      startDate: new Date(startDate.trim()).toISOString(),
+      endDate: endDate?.trim() ? new Date(endDate.trim()).toISOString() : undefined,
     };
 
     await updatePortfolio(

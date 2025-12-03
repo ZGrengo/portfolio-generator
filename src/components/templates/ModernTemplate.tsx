@@ -300,14 +300,17 @@ export default function ModernTemplate({
         className="mt-16"
         style={{ backgroundColor: colors.primary }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/60">
-          <div className="flex items-center gap-2">
+        <div className="max-w-6xl mx-auto px-6 py-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-3 text-xs text-white/60">
+          <div className="hidden sm:block"></div>
+          <div className="flex items-center justify-center gap-2">
             <span className="h-6 w-6 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-[10px] font-semibold">
               PG
             </span>
-            <span>Portfolio generated with Portfolio Generator</span>
+            <span>Generated with Portfolio Generator by Gregory Pimentel</span>
           </div>
-          <ShareButton portfolioId={portfolioId} colors={colors} />
+          <div className="flex justify-center sm:justify-end">
+            <ShareButton portfolioId={portfolioId} colors={colors} />
+          </div>
         </div>
       </footer>
     </div>
