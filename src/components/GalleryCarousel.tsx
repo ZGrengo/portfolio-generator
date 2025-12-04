@@ -19,6 +19,23 @@ interface GalleryCarouselProps {
 export default function GalleryCarousel({ images, colors }: GalleryCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Keyboard navigation
+  useEffect(() => {
+    if (!images || images.length === 0) {
+      return;
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+      } else if (event.key === 'ArrowRight') {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [images]);
+
   if (!images || images.length === 0) {
     return null;
   }
@@ -34,20 +51,6 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft') {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-      } else if (event.key === 'ArrowRight') {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [images.length]);
 
   return (
     <div className="relative w-full" tabIndex={0}>
@@ -68,20 +71,20 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <h3 className="text-2xl font-bold mb-2">{image.title}</h3>
+            <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6 text-white">
+              <h3 className="hidden sm:block text-lg sm:text-2xl font-bold mb-1 sm:mb-2">{image.title}</h3>
               {image.projectUrl && (
                 <a
                   href={image.projectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
+                  className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-medium text-white transition-all hover:opacity-90 hover:scale-105"
                   style={{ backgroundColor: colors?.highlight || '#F59E0B' }}
                 >
                   View Project
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -104,12 +107,12 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
           <>
             <button
               onClick={goToPrevious}
-              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-gray-800 shadow-lg transition-all hover:bg-white hover:scale-110 active:scale-95"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-1.5 sm:p-2 text-gray-800 shadow-lg transition-all hover:bg-white hover:scale-110 active:scale-95"
               aria-label="Previous image"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-4 w-4 sm:h-6 sm:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -119,12 +122,12 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
             </button>
             <button
               onClick={goToNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-gray-800 shadow-lg transition-all hover:bg-white hover:scale-110 active:scale-95"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-1.5 sm:p-2 text-gray-800 shadow-lg transition-all hover:bg-white hover:scale-110 active:scale-95"
               aria-label="Next image"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-4 w-4 sm:h-6 sm:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

@@ -108,15 +108,15 @@ export default function ModernTemplate({
         />
       </section>
 
-      <main className="max-w-6xl mx-auto px-4 py-16">
-        <div className="rounded-3xl bg-black/5 border border-black/20 shadow-[0_24px_80px_rgba(0,0,0,0.45)] p-8 sm:p-10 space-y-24">
+      <main className="max-w-6xl mx-auto px-4 py-8 sm:py-16">
+        <div className="rounded-3xl bg-black/5 border border-black/20 shadow-[0_24px_80px_rgba(0,0,0,0.45)] p-8 sm:p-10 space-y-12 sm:space-y-24">
           {/* SKILLS */}
           {portfolio.skills.length > 0 && (
             <motion.section
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.4 }}
+              viewport={{ once: true, amount: 0.05, margin: '-150px' }}
+              transition={{ duration: 0.2 }}
             >
               <SectionHeader label="Core stack" title="Skills" color={colors.highlight} />
 
@@ -137,10 +137,10 @@ export default function ModernTemplate({
           {/* PROJECTS */}
           {portfolio.projects.length > 0 && (
             <motion.section
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.4 }}
+              viewport={{ once: true, amount: 0.05, margin: '-150px' }}
+              transition={{ duration: 0.2 }}
             >
             <SectionHeader label="Selected work" title="Projects" color={colors.highlight} />
 
@@ -220,10 +220,10 @@ export default function ModernTemplate({
           {/* EXPERIENCE */}
           {portfolio.experience.length > 0 && (
             <motion.section
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.4 }}
+              viewport={{ once: true, amount: 0.05, margin: '-150px' }}
+              transition={{ duration: 0.2 }}
             >
             <SectionHeader label="Background" title="Experience" color={colors.highlight} />
 
@@ -264,10 +264,10 @@ export default function ModernTemplate({
           {/* EDUCATION */}
           {portfolio.education.length > 0 && (
             <motion.section
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.4 }}
+              viewport={{ once: true, amount: 0.05, margin: '-150px' }}
+              transition={{ duration: 0.2 }}
             >
             <SectionHeader label="Studies" title="Education" color={colors.highlight} />
 
@@ -309,7 +309,7 @@ export default function ModernTemplate({
             <span>Generated with Portfolio Generator by Gregory Pimentel</span>
           </div>
           <div className="flex justify-center sm:justify-end">
-            <ShareButton portfolioId={portfolioId} colors={colors} />
+          <ShareButton portfolioId={portfolioId} colors={colors} />
           </div>
         </div>
       </footer>

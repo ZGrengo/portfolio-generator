@@ -14,7 +14,7 @@ export default function Home() {
             Build a stunning portfolio website in minutes. Showcase your projects, skills, and experience with our easy-to-use portfolio generator.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <a
               href="/dashboard"
               className="text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl hover:opacity-90 hover:scale-105"
@@ -29,6 +29,32 @@ export default function Home() {
             >
               Learn More
             </a>
+          </div>
+
+          {/* Template Previews */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl mx-auto mb-16">
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg font-semibold text-white mb-3">Modern Template</h3>
+              <video
+                src="/previews/ModernTemplate.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="rounded-xl shadow-lg w-full max-w-sm"
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg font-semibold text-white mb-3">Minimalistic Template</h3>
+              <video
+                src="/previews/MinimalisticTemplate.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="rounded-xl shadow-lg w-full max-w-sm"
+              />
+            </div>
           </div>
 
           <div id="features" className="mt-24 space-y-16">

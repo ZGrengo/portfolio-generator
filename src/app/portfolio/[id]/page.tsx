@@ -25,7 +25,7 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
   }
 
   // Helper function to recursively convert ObjectIds and Dates to strings
-  const serializeForClient = (obj: any): any => {
+  const serializeForClient = (obj: unknown): unknown => {
     if (obj === null || obj === undefined) {
       return obj;
     }
@@ -48,11 +48,11 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
 
     // Handle plain objects
     if (typeof obj === 'object') {
-      const result: any = {};
+      const result: Record<string, unknown> = {};
       for (const key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
           // Skip MongoDB internal fields if desired, but we'll keep _id as string
-          result[key] = serializeForClient(obj[key]);
+          result[key] = serializeForClient((obj as Record<string, unknown>)[key]);
         }
       }
       return result;
@@ -62,55 +62,65 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
   };
 
   // Convert MongoDB document to plain object
-  const serializedPortfolio = serializeForClient(portfolio);
+  const serializedPortfolio = serializeForClient(portfolio) as Record<string, unknown>;
 
   // Build clean portfolio data object for client components
   const portfolioData = {
-    title: serializedPortfolio.title,
-    description: serializedPortfolio.description,
-    template: serializedPortfolio.template,
-    projects: serializedPortfolio.projects?.map((proj: any) => ({
-      title: proj.title || '',
-      description: proj.description || '',
-      technologies: Array.isArray(proj.technologies) ? proj.technologies : [],
+    title: (serializedPortfolio.title as string) || '',
+    description: (serializedPortfolio.description as string) || '',
+    template: (serializedPortfolio.template as 'minimalistic' | 'modern') || 'minimalistic',
+    projects: (serializedPortfolio as Record<string, unknown>).projects && Array.isArray((serializedPortfolio as Record<string, unknown>).projects)
+      ? ((serializedPortfolio as Record<string, unknown>).projects as Array<Record<string, unknown>>).map((proj) => ({
+          title: (proj.title as string) || '',
+          description: (proj.description as string) || '',
+          technologies: Array.isArray(proj.technologies) ? (proj.technologies as string[]) : [],
       imageUrls: Array.isArray(proj.imageUrls) 
-        ? proj.imageUrls.filter((url: any) => url && typeof url === 'string')
-        : (proj.imageUrl ? [proj.imageUrl] : []), // Backward compatibility
-      projectUrl: proj.projectUrl || undefined,
-      githubUrl: proj.githubUrl || undefined,
-    })) || [],
-    skills: Array.isArray(serializedPortfolio.skills) ? serializedPortfolio.skills : [],
-    education: serializedPortfolio.education?.map((edu: any) => ({
-      institution: edu.institution || '',
-      degree: edu.degree || '',
-      field: edu.field || '',
-      startDate: edu.startDate ? (typeof edu.startDate === 'string' ? edu.startDate : new Date(edu.startDate).toISOString()) : '',
-      endDate: edu.endDate ? (typeof edu.endDate === 'string' ? edu.endDate : new Date(edu.endDate).toISOString()) : undefined,
-    })) || [],
-    experience: serializedPortfolio.experience?.map((exp: any) => ({
-      company: exp.company || '',
-      position: exp.position || '',
-      description: exp.description || '',
-      startDate: exp.startDate ? (typeof exp.startDate === 'string' ? exp.startDate : new Date(exp.startDate).toISOString()) : '',
-      endDate: exp.endDate ? (typeof exp.endDate === 'string' ? exp.endDate : new Date(exp.endDate).toISOString()) : undefined,
-    })) || [],
+            ? (proj.imageUrls as string[]).filter((url) => url && typeof url === 'string')
+            : (proj.imageUrl ? [proj.imageUrl as string] : []), // Backward compatibility
+          projectUrl: (proj.projectUrl as string) || undefined,
+          githubUrl: (proj.githubUrl as string) || undefined,
+        }))
+      : [],
+    skills: Array.isArray((serializedPortfolio as Record<string, unknown>).skills) 
+      ? (serializedPortfolio as Record<string, unknown>).skills as string[]
+      : [],
+    education: (serializedPortfolio as Record<string, unknown>).education && Array.isArray((serializedPortfolio as Record<string, unknown>).education)
+      ? ((serializedPortfolio as Record<string, unknown>).education as Array<Record<string, unknown>>).map((edu) => ({
+          institution: (edu.institution as string) || '',
+          degree: (edu.degree as string) || '',
+          field: (edu.field as string) || '',
+          startDate: edu.startDate ? (typeof edu.startDate === 'string' ? edu.startDate : new Date(edu.startDate as string).toISOString()) : '',
+          endDate: edu.endDate ? (typeof edu.endDate === 'string' ? edu.endDate : new Date(edu.endDate as string).toISOString()) : undefined,
+        }))
+      : [],
+    experience: (serializedPortfolio as Record<string, unknown>).experience && Array.isArray((serializedPortfolio as Record<string, unknown>).experience)
+      ? ((serializedPortfolio as Record<string, unknown>).experience as Array<Record<string, unknown>>).map((exp) => ({
+          company: (exp.company as string) || '',
+          position: (exp.position as string) || '',
+          description: (exp.description as string) || '',
+          startDate: exp.startDate ? (typeof exp.startDate === 'string' ? exp.startDate : new Date(exp.startDate as string).toISOString()) : '',
+          endDate: exp.endDate ? (typeof exp.endDate === 'string' ? exp.endDate : new Date(exp.endDate as string).toISOString()) : undefined,
+        }))
+      : [],
   };
 
-  const TemplateComponent = serializedPortfolio.template === 'modern' ? ModernTemplate : MinimalisticTemplate;
-  const colors = serializedPortfolio.colors || {
-    primary: '#3B82F6',
-    secondary: '#1E40AF',
-    highlight: '#F59E0B',
-  };
+  const TemplateComponent = portfolioData.template === 'modern' ? ModernTemplate : MinimalisticTemplate;
+  const colors = (serializedPortfolio.colors && typeof serializedPortfolio.colors === 'object' 
+    ? serializedPortfolio.colors as { primary: string; secondary: string; highlight: string }
+    : {
+        primary: '#3B82F6',
+        secondary: '#1E40AF',
+        highlight: '#F59E0B',
+      });
 
   return (
     <>
       <LoadingPortfolioReveal color={colors.primary} highlightColor={colors.highlight} />
-      <TemplateComponent
-        portfolio={portfolioData}
-        portfolioId={id}
+    <TemplateComponent
+      portfolio={portfolioData}
+      portfolioId={id}
         colors={colors}
-      />
+    />
     </>
   );
 }

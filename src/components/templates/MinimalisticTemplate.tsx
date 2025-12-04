@@ -49,10 +49,10 @@ export default function MinimalisticTemplate({ portfolio, portfolioId, colors }:
       {/* Header */}
       <header className="border-b-2 py-12 px-6" style={{ borderColor: colors.primary }}>
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-light mb-4" style={{ color: colors.primary }}>
+          <h1 className="text-5xl font-light mb-4 text-center sm:text-left" style={{ color: colors.primary }}>
             {portfolio.title}
           </h1>
-          <p className="text-lg font-light leading-relaxed max-w-2xl" style={{ color: colors.secondary }}>
+          <p className="text-lg font-light leading-relaxed max-w-2xl text-center sm:text-left sm:mx-0 mx-auto" style={{ color: colors.secondary }}>
             {portfolio.description}
           </p>
         </div>
