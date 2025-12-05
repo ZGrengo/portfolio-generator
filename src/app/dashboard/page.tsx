@@ -783,7 +783,8 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={fetchPortfolios}
-                className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                className="text-sm font-medium transition-colors hover:opacity-80"
+                style={{ color: '#C2948A' }}
               >
                 Refresh
               </button>
@@ -821,14 +822,15 @@ export default function DashboardPage() {
                           href={`/portfolio/${portfolio._id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                          className="px-3 py-1 rounded text-white transition-colors hover:opacity-90"
+                          style={{ backgroundColor: '#C2948A' }}
                         >
                           Demo
                         </a>
                         <button
                           type="button"
                           onClick={() => handleDeletePortfolio(portfolio._id)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-500 hover:text-red-600"
                         >
                           Delete
                         </button>
@@ -943,7 +945,8 @@ export default function DashboardPage() {
               </div>
               <button
                 type="submit"
-                className="w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
+                className="w-full rounded-lg px-4 py-2 font-semibold text-white transition-colors hover:opacity-90"
+                style={{ backgroundColor: '#C2948A' }}
               >
                 Create Portfolio
               </button>
@@ -1051,7 +1054,8 @@ export default function DashboardPage() {
               <div className="md:col-span-2">
                 <button
                   type="submit"
-                  className="rounded-lg bg-emerald-600 px-4 py-2 font-semibold text-white transition hover:bg-emerald-700"
+                  className="rounded-lg px-4 py-2 font-semibold text-white transition-colors hover:opacity-90"
+                  style={{ backgroundColor: '#C2948A' }}
                 >
                   Save Details
                 </button>
@@ -1074,7 +1078,8 @@ export default function DashboardPage() {
                       <button
                         type="button"
                         onClick={() => handleEditSkill(index)}
-                        className="text-blue-500 hover:text-blue-600"
+                        className="transition-colors hover:opacity-80"
+                        style={{ color: '#C2948A' }}
                       >
                         Edit
                       </button>
@@ -1101,7 +1106,8 @@ export default function DashboardPage() {
                   />
                   <button
                     type="submit"
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                    className="rounded-lg px-4 py-2 text-sm font-semibold text-white transition-colors hover:opacity-90"
+                    style={{ backgroundColor: '#C2948A' }}
                   >
                     Add
                   </button>
@@ -1127,14 +1133,15 @@ export default function DashboardPage() {
                         <button
                           type="button"
                           onClick={() => handleEditProject(index)}
-                          className="text-blue-600 hover:text-blue-700"
+                          className="transition-colors hover:opacity-80"
+                          style={{ color: '#C2948A' }}
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDeleteProject(index)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-500 hover:text-red-600"
                         >
                           Delete
                         </button>
@@ -1263,7 +1270,8 @@ export default function DashboardPage() {
                   />
                   <button
                     type="submit"
-                    className="w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                    className="w-full rounded-lg px-4 py-2 font-semibold text-white transition-colors hover:opacity-90"
+                    style={{ backgroundColor: '#C2948A' }}
                   >
                     Add Project
                   </button>
@@ -1294,14 +1302,15 @@ export default function DashboardPage() {
                         <button
                           type="button"
                           onClick={() => handleEditEducation(index)}
-                          className="text-blue-600 hover:text-blue-700"
+                          className="transition-colors hover:opacity-80"
+                          style={{ color: '#C2948A' }}
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDeleteEducation(index)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-500 hover:text-red-600"
                         >
                           Delete
                         </button>
@@ -1366,7 +1375,8 @@ export default function DashboardPage() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                    className="w-full rounded-lg px-4 py-2 font-semibold text-white transition-colors hover:opacity-90"
+                    style={{ backgroundColor: '#C2948A' }}
                   >
                     Add Education
                   </button>
@@ -1394,14 +1404,15 @@ export default function DashboardPage() {
                         <button
                           type="button"
                           onClick={() => handleEditExperience(index)}
-                          className="text-blue-600 hover:text-blue-700"
+                          className="transition-colors hover:opacity-80"
+                          style={{ color: '#C2948A' }}
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDeleteExperience(index)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-500 hover:text-red-600"
                         >
                           Delete
                         </button>
@@ -1466,7 +1477,8 @@ export default function DashboardPage() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                    className="w-full rounded-lg px-4 py-2 font-semibold text-white transition-colors hover:opacity-90"
+                    style={{ backgroundColor: '#C2948A' }}
                   >
                     Add Experience
                   </button>

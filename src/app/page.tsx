@@ -138,7 +138,7 @@ export default function Home() {
                     <div className="flex-grow">
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">Add your projects</h3>
                       <p className="text-gray-700 mb-2">
-                        Upload images, links, descriptions, and technologies used in each project.
+                        Add images links, project urls, github urls, descriptions, and technologies used in each project.
                       </p>
                       <p className="text-gray-600 text-sm">
                         Your visuals are displayed in beautiful responsive carousels, optimized for fast loading.

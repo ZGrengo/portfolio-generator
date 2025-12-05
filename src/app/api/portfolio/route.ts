@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@auth0/nextjs-auth0';
+import { auth0 } from '@/lib/auth0';
 import connectDB from '@/lib/db';
 import Portfolio from '@/models/Portfolio';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await auth0.getSession(request);
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -30,7 +30,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await auth0.getSession(request);
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await auth0.getSession(request);
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -137,7 +137,7 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await auth0.getSession(request);
     
     if (!session || !session.user) {
       return NextResponse.json(
