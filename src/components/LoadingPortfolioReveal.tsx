@@ -9,12 +9,20 @@ interface LoadingPortfolioRevealProps {
 }
 
 export default function LoadingPortfolioReveal({ color, highlightColor }: LoadingPortfolioRevealProps) {
+  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(true);
   const [expandHorizontal, setExpandHorizontal] = useState(false);
   const primary = color || '#111';
   const highlight = highlightColor || '#F59E0B';
 
   useEffect(() => {
+    // Only render on client to avoid hydration mismatch
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    
     // Line completes in 0.9s, then expand horizontally
     const expandTimer = setTimeout(() => setExpandHorizontal(true), 900);
     // Total animation: 0.9s (line) + 0.5s (expand) = 1.4s minimum
@@ -23,7 +31,13 @@ export default function LoadingPortfolioReveal({ color, highlightColor }: Loadin
       clearTimeout(expandTimer);
       clearTimeout(hideTimer);
     };
-  }, []);
+  }, [mounted]);
+
+  // Don't render on server to avoid hydration mismatch
+  // Early return after all hooks
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <AnimatePresence>

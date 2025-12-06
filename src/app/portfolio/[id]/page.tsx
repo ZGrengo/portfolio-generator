@@ -31,9 +31,11 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
     }
 
     // Check if it's an ObjectId (has toString method and constructor name)
-    if (obj && typeof obj === 'object' && typeof obj.toString === 'function' && 
-        (obj.constructor?.name === 'ObjectId' || obj.toString().match(/^[0-9a-fA-F]{24}$/))) {
-      return obj.toString();
+    if (obj && typeof obj === 'object' && typeof obj.toString === 'function') {
+      const objWithConstructor = obj as { constructor?: { name?: string }; toString: () => string };
+      if (objWithConstructor.constructor?.name === 'ObjectId' || objWithConstructor.toString().match(/^[0-9a-fA-F]{24}$/)) {
+        return objWithConstructor.toString();
+      }
     }
 
     // Handle Date objects
@@ -43,16 +45,17 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
 
     // Handle arrays
     if (Array.isArray(obj)) {
-      return obj.map(item => serializeForClient(item));
+      return obj.map((item: unknown) => serializeForClient(item));
     }
 
     // Handle plain objects
     if (typeof obj === 'object') {
       const result: Record<string, unknown> = {};
-      for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const objRecord = obj as Record<string, unknown>;
+      for (const key in objRecord) {
+        if (Object.prototype.hasOwnProperty.call(objRecord, key)) {
           // Skip MongoDB internal fields if desired, but we'll keep _id as string
-          result[key] = serializeForClient((obj as Record<string, unknown>)[key]);
+          result[key] = serializeForClient(objRecord[key]);
         }
       }
       return result;
@@ -69,39 +72,55 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
     title: (serializedPortfolio.title as string) || '',
     description: (serializedPortfolio.description as string) || '',
     template: (serializedPortfolio.template as 'minimalistic' | 'modern') || 'minimalistic',
-    projects: (serializedPortfolio as Record<string, unknown>).projects && Array.isArray((serializedPortfolio as Record<string, unknown>).projects)
-      ? ((serializedPortfolio as Record<string, unknown>).projects as Array<Record<string, unknown>>).map((proj) => ({
+    projects: (() => {
+      const projects = serializedPortfolio.projects;
+      if (projects && Array.isArray(projects)) {
+        const projectsArray = projects as Array<Record<string, unknown>>;
+        return projectsArray.map((proj: Record<string, unknown>) => ({
           title: (proj.title as string) || '',
           description: (proj.description as string) || '',
           technologies: Array.isArray(proj.technologies) ? (proj.technologies as string[]) : [],
-      imageUrls: Array.isArray(proj.imageUrls) 
-            ? (proj.imageUrls as string[]).filter((url) => url && typeof url === 'string')
+          imageUrls: Array.isArray(proj.imageUrls) 
+            ? (proj.imageUrls as string[]).filter((url: unknown) => url && typeof url === 'string')
             : (proj.imageUrl ? [proj.imageUrl as string] : []), // Backward compatibility
           projectUrl: (proj.projectUrl as string) || undefined,
           githubUrl: (proj.githubUrl as string) || undefined,
-        }))
-      : [],
-    skills: Array.isArray((serializedPortfolio as Record<string, unknown>).skills) 
-      ? (serializedPortfolio as Record<string, unknown>).skills as string[]
-      : [],
-    education: (serializedPortfolio as Record<string, unknown>).education && Array.isArray((serializedPortfolio as Record<string, unknown>).education)
-      ? ((serializedPortfolio as Record<string, unknown>).education as Array<Record<string, unknown>>).map((edu) => ({
+        }));
+      }
+      return [];
+    })(),
+    skills: (() => {
+      const skills = serializedPortfolio.skills;
+      return Array.isArray(skills) ? (skills as string[]) : [];
+    })(),
+    education: (() => {
+      const education = serializedPortfolio.education;
+      if (education && Array.isArray(education)) {
+        const educationArray = education as Array<Record<string, unknown>>;
+        return educationArray.map((edu: Record<string, unknown>) => ({
           institution: (edu.institution as string) || '',
           degree: (edu.degree as string) || '',
           field: (edu.field as string) || '',
           startDate: edu.startDate ? (typeof edu.startDate === 'string' ? edu.startDate : new Date(edu.startDate as string).toISOString()) : '',
           endDate: edu.endDate ? (typeof edu.endDate === 'string' ? edu.endDate : new Date(edu.endDate as string).toISOString()) : undefined,
-        }))
-      : [],
-    experience: (serializedPortfolio as Record<string, unknown>).experience && Array.isArray((serializedPortfolio as Record<string, unknown>).experience)
-      ? ((serializedPortfolio as Record<string, unknown>).experience as Array<Record<string, unknown>>).map((exp) => ({
+        }));
+      }
+      return [];
+    })(),
+    experience: (() => {
+      const experience = serializedPortfolio.experience;
+      if (experience && Array.isArray(experience)) {
+        const experienceArray = experience as Array<Record<string, unknown>>;
+        return experienceArray.map((exp: Record<string, unknown>) => ({
           company: (exp.company as string) || '',
           position: (exp.position as string) || '',
           description: (exp.description as string) || '',
           startDate: exp.startDate ? (typeof exp.startDate === 'string' ? exp.startDate : new Date(exp.startDate as string).toISOString()) : '',
           endDate: exp.endDate ? (typeof exp.endDate === 'string' ? exp.endDate : new Date(exp.endDate as string).toISOString()) : undefined,
-        }))
-      : [],
+        }));
+      }
+      return [];
+    })(),
   };
 
   const TemplateComponent = portfolioData.template === 'modern' ? ModernTemplate : MinimalisticTemplate;

@@ -36,10 +36,6 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [images]);
 
-  if (!images || images.length === 0) {
-    return null;
-  }
-
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
@@ -51,6 +47,11 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
+
+  // Guard clause: return null if no images (after all hooks)
+  if (!images || images.length === 0) {
+    return null;
+  }
 
   return (
     <div className="relative w-full" tabIndex={0}>

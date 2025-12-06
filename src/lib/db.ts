@@ -12,8 +12,8 @@ interface Cached {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
-  var mongoose: Cached;
+  /* eslint-disable-next-line no-var */
+  var mongoose: Cached; // Required for TypeScript global augmentation
 }
 
 let cached: Cached = global.mongoose || { conn: null, promise: null };
