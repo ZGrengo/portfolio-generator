@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Navbar from '@/components/Navbar';
+import { isImageUrlAllowed } from '@/lib/imageValidation';
 
 type Project = {
   title: string;
@@ -178,6 +179,20 @@ export default function DashboardPage() {
 
     return portfolios[0];
   }, [portfolios, selectedId]);
+
+  // Check if project form has invalid image URLs and get the list
+  const invalidImageUrlsInfo = useMemo(() => {
+    const imageUrls = newProject.imageUrls.filter((url) => url.trim() !== '');
+    if (imageUrls.length === 0) return { hasInvalid: false, invalidUrls: [] };
+    
+    const invalidUrls: string[] = [];
+    for (const url of imageUrls) {
+      if (!isValidUrl(url) || !isImageUrlAllowed(url)) {
+        invalidUrls.push(url);
+      }
+    }
+    return { hasInvalid: invalidUrls.length > 0, invalidUrls };
+  }, [newProject.imageUrls]);
 
   const showError = (message: string) => {
     setError(message);
@@ -442,10 +457,16 @@ export default function DashboardPage() {
 
     // Validate URLs
     const imageUrls = newProject.imageUrls.filter((url) => url.trim() !== '');
+    const invalidUrls: string[] = [];
+    
     for (const url of imageUrls) {
       if (!isValidUrl(url)) {
         showError(`Invalid image URL: ${url}`);
         return;
+      }
+      // Check if URL is from allowed domain
+      if (!isImageUrlAllowed(url)) {
+        invalidUrls.push(url);
       }
     }
 
@@ -456,6 +477,15 @@ export default function DashboardPage() {
 
     if (newProject.githubUrl && !isValidUrl(newProject.githubUrl)) {
       showError('Invalid GitHub URL');
+      return;
+    }
+
+    // Block saving if there are invalid image URLs
+    if (invalidUrls.length > 0) {
+      showError(
+        `Cannot add project: Some image URLs are from unsupported domains: ${invalidUrls.join(', ')}. ` +
+        `Supported domains: Imgur, Unsplash, Cloudinary, GitHub, AWS S3, Gravatar, Google, Auth0.`
+      );
       return;
     }
 
@@ -1268,13 +1298,39 @@ export default function DashboardPage() {
                     placeholder="GitHub URL (optional)"
                     className="w-full rounded-lg border border-gray-300 px-3 py-2 text-black placeholder:text-gray-500 focus:border-blue-500 focus:outline-none font-sans"
                   />
-                  <button
-                    type="submit"
-                    className="w-full rounded-lg px-4 py-2 font-semibold text-white transition-colors hover:opacity-90"
-                    style={{ backgroundColor: '#C2948A' }}
-                  >
-                    Add Project
-                  </button>
+                  <div className="relative group">
+                    <button
+                      type="submit"
+                      disabled={invalidImageUrlsInfo.hasInvalid}
+                      className="w-full rounded-lg px-4 py-2 font-semibold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
+                      style={{ backgroundColor: '#C2948A' }}
+                    >
+                      Add Project
+                    </button>
+                    {invalidImageUrlsInfo.hasInvalid && (
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 border border-gray-700">
+                        <div className="font-semibold mb-2 flex items-center gap-2">
+                          <span>⚠️</span>
+                          <span>Invalid Image URLs</span>
+                        </div>
+                        <div className="mb-2 text-gray-300">
+                          The following image URLs are from unsupported domains:
+                        </div>
+                        <ul className="list-disc list-inside mb-2 space-y-1 text-xs text-gray-200 max-h-32 overflow-y-auto">
+                          {invalidImageUrlsInfo.invalidUrls.map((url, idx) => (
+                            <li key={idx} className="break-all pl-1">{url}</li>
+                          ))}
+                        </ul>
+                        <div className="text-xs border-t border-gray-700 pt-2 mt-2 text-gray-300">
+                          <strong className="text-white">Supported domains:</strong> Imgur, Unsplash, Cloudinary, GitHub, AWS S3, Gravatar, Google, Auth0
+                        </div>
+                        {/* Arrow pointing down */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
+                          <div className="w-3 h-3 bg-gray-900 border-r border-b border-gray-700 rotate-45"></div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </form>
               </div>
             </div>

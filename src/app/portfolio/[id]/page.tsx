@@ -4,6 +4,7 @@ import ModernTemplate from '@/components/templates/ModernTemplate';
 import LoadingPortfolioReveal from '@/components/LoadingPortfolioReveal';
 import connectDB from '@/lib/db';
 import Portfolio from '@/models/Portfolio';
+import { filterValidImageUrls, isImageUrlAllowed } from '@/lib/imageValidation';
 
 async function getPortfolio(id: string) {
   try {
@@ -76,16 +77,23 @@ export default async function PortfolioPage({ params }: { params: Promise<{ id: 
       const projects = serializedPortfolio.projects;
       if (projects && Array.isArray(projects)) {
         const projectsArray = projects as Array<Record<string, unknown>>;
-        return projectsArray.map((proj: Record<string, unknown>) => ({
-          title: (proj.title as string) || '',
-          description: (proj.description as string) || '',
-          technologies: Array.isArray(proj.technologies) ? (proj.technologies as string[]) : [],
-          imageUrls: Array.isArray(proj.imageUrls) 
-            ? (proj.imageUrls as string[]).filter((url: unknown) => url && typeof url === 'string')
-            : (proj.imageUrl ? [proj.imageUrl as string] : []), // Backward compatibility
-          projectUrl: (proj.projectUrl as string) || undefined,
-          githubUrl: (proj.githubUrl as string) || undefined,
-        }));
+        return projectsArray.map((proj: Record<string, unknown>) => {
+          // Filter valid image URLs
+          const imageUrls = Array.isArray(proj.imageUrls) 
+            ? filterValidImageUrls((proj.imageUrls as string[]).filter((url: unknown) => url && typeof url === 'string'))
+            : (proj.imageUrl && typeof proj.imageUrl === 'string' && isImageUrlAllowed(proj.imageUrl)
+              ? [proj.imageUrl]
+              : []); // Backward compatibility
+          
+          return {
+            title: (proj.title as string) || '',
+            description: (proj.description as string) || '',
+            technologies: Array.isArray(proj.technologies) ? (proj.technologies as string[]) : [],
+            imageUrls,
+            projectUrl: (proj.projectUrl as string) || undefined,
+            githubUrl: (proj.githubUrl as string) || undefined,
+          };
+        });
       }
       return [];
     })(),

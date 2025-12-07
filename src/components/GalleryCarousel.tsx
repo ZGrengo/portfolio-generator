@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { isImageUrlAllowed } from '@/lib/imageValidation';
 
 interface GalleryCarouselProps {
   images: Array<{
@@ -18,38 +19,52 @@ interface GalleryCarouselProps {
 
 export default function GalleryCarousel({ images, colors }: GalleryCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+
+  // Filter out invalid image URLs
+  const validImages = images.filter((image) => {
+    if (!isImageUrlAllowed(image.url)) {
+      console.warn(`Image URL not allowed: ${image.url}`);
+      return false;
+    }
+    return true;
+  });
 
   // Keyboard navigation
   useEffect(() => {
-    if (!images || images.length === 0) {
+    if (!validImages || validImages.length === 0) {
       return;
     }
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowLeft') {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + validImages.length) % validImages.length);
       } else if (event.key === 'ArrowRight') {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % validImages.length);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [images]);
+  }, [validImages]);
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + validImages.length) % validImages.length);
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % validImages.length);
   };
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
 
-  // Guard clause: return null if no images (after all hooks)
-  if (!images || images.length === 0) {
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => new Set(prev).add(index));
+  };
+
+  // Guard clause: return null if no valid images (after all hooks)
+  if (!validImages || validImages.length === 0) {
     return null;
   }
 
@@ -57,20 +72,35 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
     <div className="relative w-full" tabIndex={0}>
       {/* Main Carousel */}
       <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-gray-100">
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-500 ${
-              index === currentIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <Image
-              src={image.url}
-              alt={image.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-            />
+        {validImages.map((image, index) => {
+          const hasError = imageErrors.has(index);
+          
+          return (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-500 ${
+                index === currentIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              {hasError ? (
+                // Fallback to regular img tag if Next.js Image fails
+                <img
+                  src={image.url}
+                  alt={image.title}
+                  className="w-full h-full object-cover"
+                  onError={() => handleImageError(index)}
+                />
+              ) : (
+                <Image
+                  src={image.url}
+                  alt={image.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                  onError={() => handleImageError(index)}
+                  unoptimized={!isImageUrlAllowed(image.url)}
+                />
+              )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6 text-white">
               <h3 className="hidden sm:block text-lg sm:text-2xl font-bold mb-1 sm:mb-2">{image.title}</h3>
@@ -101,10 +131,11 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
               )}
             </div>
           </div>
-        ))}
+          );
+        })}
 
         {/* Navigation Arrows */}
-        {images.length > 1 && (
+        {validImages.length > 1 && (
           <>
             <button
               onClick={goToPrevious}
@@ -140,9 +171,9 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
         )}
 
         {/* Slide Indicators */}
-        {images.length > 1 && (
+        {validImages.length > 1 && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {images.map((_, index) => (
+            {validImages.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
@@ -159,36 +190,51 @@ export default function GalleryCarousel({ images, colors }: GalleryCarouselProps
       </div>
 
       {/* Thumbnail Navigation */}
-      {images.length > 1 && (
+      {validImages.length > 1 && (
         <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
-          {images.map((image, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`relative h-20 w-32 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
-                index === currentIndex
-                  ? 'opacity-100'
-                  : 'border-transparent opacity-60 hover:opacity-100'
-              }`}
-              style={
-                index === currentIndex && colors?.primary
-                  ? {
-                      borderColor: colors.primary,
-                      boxShadow: `0 0 0 2px ${colors.primary}40`,
-                    }
-                  : {}
-              }
-              aria-label={`View ${image.title}`}
-            >
-              <Image
-                src={image.url}
-                alt={image.title}
-                fill
-                className="object-cover"
-                sizes="128px"
-              />
-            </button>
-          ))}
+          {validImages.map((image, index) => {
+            const hasError = imageErrors.has(index);
+            
+            return (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`relative h-20 w-32 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+                  index === currentIndex
+                    ? 'opacity-100'
+                    : 'border-transparent opacity-60 hover:opacity-100'
+                }`}
+                style={
+                  index === currentIndex && colors?.primary
+                    ? {
+                        borderColor: colors.primary,
+                        boxShadow: `0 0 0 2px ${colors.primary}40`,
+                      }
+                    : {}
+                }
+                aria-label={`View ${image.title}`}
+              >
+                {hasError ? (
+                  <img
+                    src={image.url}
+                    alt={image.title}
+                    className="w-full h-full object-cover"
+                    onError={() => handleImageError(index)}
+                  />
+                ) : (
+                  <Image
+                    src={image.url}
+                    alt={image.title}
+                    fill
+                    className="object-cover"
+                    sizes="128px"
+                    onError={() => handleImageError(index)}
+                    unoptimized={!isImageUrlAllowed(image.url)}
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
