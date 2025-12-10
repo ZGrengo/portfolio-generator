@@ -75,6 +75,16 @@ Una aplicación web moderna construida con Next.js que permite crear y gestionar
 -   Cuenta de MongoDB (local o Atlas)
 -   Cuenta de Auth0
 
+<p align="center">
+<img width="600" alt="Portada con plantillas" src="https://github.com/user-attachments/assets/7997e249-b5dd-416d-8096-b10c6a189070" />
+    
+<img width="600" alt="MinimalistaDesktop2" src="https://github.com/user-attachments/assets/c33e4796-7de1-4e0b-9f24-2bacb2a96bbb" />
+</p>
+<p align="center">
+<img height="600" alt="ModernMovil2" src="https://github.com/user-attachments/assets/d5d9d730-27b2-4184-a55e-97369f679907" />
+<img height="600" alt="MinimalistaMovil2" src="https://github.com/user-attachments/assets/3982b7c8-6f82-4ee9-ba2d-2ffa13c3d654" />
+</p>
+
 ## 🚀 Inicio Rápido
 
 ### 1. Clonar el repositorio
