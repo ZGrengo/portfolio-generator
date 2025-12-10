@@ -10,6 +10,19 @@
 
 Una aplicación web moderna construida con Next.js que permite crear y gestionar portafolios profesionales con plantillas personalizables.
 
+- [Características](#-características)
+- [Stack Tecnológico](#%EF%B8%8F-stack-tecnológico)
+- [Requisitos Previos](#-requisitos-previos)
+- [Inicio Rápido](#-inicio-rápido)
+- [Dominios de Imágenes Soportados](#%EF%B8%8F-dominios-de-imágenes-soportados)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Deployment](#-deployment)
+- [Uso](#-uso)
+- [Seguridad](#-seguridad)
+- [Scripts Disponibles](#-scripts-disponibles)
+- [Contribuir](#-contribuir)
+- [Licencia](#-licencia)
+
 ## 🚀 Características
 
 ### Gestión de Portafolios
